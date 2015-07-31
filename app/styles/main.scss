@@ -1,0 +1,39 @@
+$icon-font-path: "../bower_components/bootstrap-sass/assets/fonts/bootstrap/";
+
+// bower:scss
+@import "bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
+// endbower
+
+body{
+  background: Lavender;
+  text-align: center;  
+}
+
+#header{
+
+  display: none;
+  border-bottom: 1px solid black;
+  img{
+    width: 15%;
+  }
+}
+
+#logo{
+  margin-top: 20%;
+}
+
+#nivel{
+  display: none;
+  text-align: center;
+  #cuerpo{
+    display: inline-block;
+
+  }
+}
+
+.footer{
+  display: none;
+}
+
+
+

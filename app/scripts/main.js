@@ -16,5 +16,7 @@ $("#header").on('click','a',function () {
 
 $("#cuerpo").on('click','button',function () {
 	$("#cuerpo").hide();
+	alert($(this).text());
+	console.log($("button"));
 	return false;
 });

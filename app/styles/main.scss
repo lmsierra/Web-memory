@@ -33,13 +33,17 @@ body{
     }
   }
   #juego{
-    
+    margin: 15px;
+    .foto{
+      display: initial;
+    }
+    .row{
+      margin:0;
+      padding: 0;
+    }
   }
 }
 
 .footer{
   display: none;
 }
-
-
-

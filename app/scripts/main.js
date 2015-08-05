@@ -29,49 +29,27 @@ document.getElementById('home').addEventListener('click', function(){
     return false;
 });
 
-
 function iniciarJuego(dificultad){
 
 
-	var html1 = '<div id="primeraFila" class="row fila"></div><div id="segundaFila"class="row fila"></div>';
-	document.getElementById('juego').innerHTML = html1;
-
-
-
+	document.getElementById('juego').innerHTML = "";
 
 	for(var i = 0; i < dificultad; i++){
 
-		var div = document.createElement('DIV');
-		div.className = 'row foto';
-		document.getElementById('juego').appendChild(div);
+		var _div = "<div class='row'></div>";
+		document.getElementById('juego').innerHTML = document.getElementById('juego').innerHTML + _div;
 		
 		for(var j = 0; j < dificultad; j++){
 
 			var _row = document.getElementById('juego').getElementsByClassName('row')[i];
-			_row.insertAdjacentHTML('beforeend','<div class="foto"><a href="#"><img src="/images/rana.jpg"></a></div>');
+
+			_row.innerHTML = _row.innerHTML + '<div class="foto"><a href="#"><img src="/images/fondo.png"/></a></div>';
 		}
 	}
 
 	var _fotos = document.getElementById('juego').getElementsByTagName('img');
+
 	for(var i = 0; i < _fotos.length; i++){
-		/*
-		var x = 100/dificultad;
-
-		console.log(_fotos[i].offsetWidth);
-		var w = _fotos[i].offsetWidth * x;
-		var h = _fotos[i].offsetHeight * x;
-
-		//var tamanio = (w < h)? tamanio = h : tamanio = w;
-		console.log(w); 
-		console.log(h);
-
-		//_fotos[i].style.width = tamanio;
-		*/
-
-		var y = window.innerHeight;
-		var z = document.getElementById('header').offsetHeight;
-		console.log(y);
-		console.log(z);
 
 		_fotos[i].style.width = ((window.innerWidth - 300)/dificultad) + 'px';
 		_fotos[i].style.height = ((window.innerHeight - document.getElementById('header').offsetHeight -30)/dificultad) + 'px';

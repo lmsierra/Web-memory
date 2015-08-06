@@ -113,23 +113,21 @@ function iniciarJuego(){
 		arrayImagenes[i] = -1;
 	}
 
-	document.getElementById('juego').innerHTML = "";
+	var _tablero = "<div class='row'>";
+	var _tamanio = dificultad * dificultad;
 
-	for(var i = 0; i < dificultad; i++){
-
-		var _div = "<div class='row'></div>";
-		document.getElementById('juego').innerHTML = document.getElementById('juego').innerHTML + _div;
-		
-		for(var j = 0; j < dificultad; j++){
-			generarImagen((i*dificultad + j));
-			var _row = document.getElementById('juego').getElementsByClassName('row')[i];
-			_row.innerHTML = _row.innerHTML + '<div class="foto"><a href="#" data-imagen=' + (i*dificultad + j) + ' class="enlace-imagen"><img class="fondo" src="/images/fondo.png"></a></div>';
-		}
+	for(var i = 0; i < _tamanio; i++){
+		generarImagen(i);
+		_tablero += '<div class="foto"><a href="#" data-imagen=' + i +
+				    ' class="enlace-imagen"><img class="fondo" src="/images/fondo.png"></a></div>';
 	}
 
-	calcularTamanio();
+	_tablero += "</div>";
+	document.getElementById('juego').innerHTML = _tablero;
 
+	calcularTamanio();
 	establecerFuncionalidad();
+
 }
 
 function generarImagen(posicion){

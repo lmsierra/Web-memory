@@ -61,8 +61,7 @@ function iniciarJuego(dificultad){
 
 	for(var i = 0; i < _fotos.length; i++){
 
-		_fotos[i].
-		.width = ((window.innerWidth - 300)/dificultad) + 'px';
+		_fotos[i].style.width = ((window.innerWidth - 300)/dificultad) + 'px';
 		_fotos[i].style.height = ((window.innerHeight - document.getElementById('header').offsetHeight -30)/dificultad) + 'px';
 	}
 

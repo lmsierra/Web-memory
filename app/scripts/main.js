@@ -5,6 +5,9 @@ var imagenes = ['aguila', 'buho' , 'camaleon', 'cangrejo', 'castor', 'cocodrilo'
  'panda','pandarojo','pez','pinguinos','polar','rana','raya','rinoceronte','salamandra','sepia',
  'serpiente','tiburon','tigre','tortuga','tucan'];
 
+var _click = [];
+var _mostrado = -1;
+
 document.getElementById('empezarBtn').addEventListener('click', function(){
 	document.getElementById('logo').style.display = 'none';
     document.getElementById('header').style.display = 'block';
@@ -42,30 +45,28 @@ function iniciarJuego(dificultad){
 		_apariciones[i] = 0;
 	}
 
-	document.getElementById('juego').innerHTML = "";
+	var _tablero = "<div class='row'>";
+	var _tamanio = dificultad * dificultad;
 
-	for(var i = 0; i < dificultad; i++){
-
-		var _div = "<div class='row'></div>";
-		document.getElementById('juego').innerHTML = document.getElementById('juego').innerHTML + _div;
-		
-		for(var j = 0; j < dificultad; j++){
-
-			var _row = document.getElementById('juego').getElementsByClassName('row')[i];
-
-			_row.innerHTML = _row.innerHTML + '<div class="foto"><a href="#"><img class="imagen" src="/images/' +
-			 imagenes[generarImagen(_apariciones, dificultad)] + 
-			 '.jpg"/><img class="fondo" src="/images/fondo.png"></a></div>';
-		}
+	for(var i = 0; i < _tamanio; i++){
+		_tablero += '<div class="foto"><a href="#"><img class="imagen" src="/images/' +
+		 imagenes[generarImagen(_apariciones, dificultad)] + 
+		 '.jpg"/><img class="fondo" src="/images/fondo.png"></a></div>'
 	}
+
+	_tablero += "</div>";
+	document.getElementById('juego').innerHTML = _tablero;
 
 	var _fotos = document.getElementById('juego').getElementsByTagName('img');
 
 	for(var i = 0; i < _fotos.length; i++){
 
-		_fotos[i].style.width = ((window.innerWidth - 300)/dificultad) + 'px';
+		_fotos[i].
+		.width = ((window.innerWidth - 300)/dificultad) + 'px';
 		_fotos[i].style.height = ((window.innerHeight - document.getElementById('header').offsetHeight -30)/dificultad) + 'px';
 	}
+
+	jugar();
 }
 
 function generarImagen(apariciones, dificultad){
@@ -77,6 +78,23 @@ function generarImagen(apariciones, dificultad){
 	}
 
 	apariciones[_random] ++;
-	console.log(_random);
 	return _random;
+}
+
+function jugar (){
+	
+	_click = document.getElementsByClassName('foto');
+
+	for(var i = 0; i < _click.length; i++){
+
+		_click[i].addEventListener('click', function(){
+			
+			comprobarPulsados();
+
+		    this.getElementsByClassName('fondo')[0].style.display = 'none';
+			this.getElementsByClassName('imagen')[0].style.display = 'inline-block';
+
+			return false;
+		});
+	}
 }

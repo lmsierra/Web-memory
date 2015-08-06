@@ -5,11 +5,18 @@ var imagenes = ['aguila', 'buho' , 'camaleon', 'cangrejo', 'castor', 'cocodrilo'
  'panda','pandarojo','pez','pinguinos','polar','rana','raya','rinoceronte','salamandra','sepia',
  'serpiente','tiburon','tigre','tortuga','tucan'];
 
+var imagenAnterior = -1;
+var enlaceAnterior;
+var arrayImagenes;
+var bloqueado = false;
+var aciertos = 0;
+var parejasRealizadas = 0;
+var dificultad;
+
+window.addEventListener("resize", calcularTamanio);
+
 document.getElementById('empezarBtn').addEventListener('click', function(){
-	document.getElementById('logo').style.display = 'none';
-    document.getElementById('header').style.display = 'block';
-    document.getElementById('nivel').style.display = 'block';
-    document.getElementById('cuerpo').style.display = 'inline-block';
+	elegirDificultad();
     return false;
 });
 
@@ -18,10 +25,11 @@ for(var i = 0; i < _opcionesDificultad.length; i++){
 
 	_opcionesDificultad[i].addEventListener('click', function(){
 	    
+	    document.getElementById('juego').style.display = 'inline-block';
 	    document.getElementById('cuerpo').style.display = 'none';
-	    var _dificultad = this.textContent.split('X')[0];
+	    dificultad = this.textContent.split('X')[0];
 
-	    iniciarJuego(_dificultad);
+	    iniciarJuego();
 
 		return false;
 	});
@@ -34,12 +42,75 @@ document.getElementById('home').addEventListener('click', function(){
     return false;
 });
 
-function iniciarJuego(dificultad){
+function establecerFuncionalidad(){
+	var enlaces = document.getElementsByClassName('enlace-imagen');
+	
+	for(var i = 0; i < enlaces.length; i++){
 
-	var _apariciones = new Array(imagenes.length);
+		enlaces[i].addEventListener('click', function(){
+			if(!bloqueado){
+				if(!this.classList.contains('activada')){
+					levantarCarta(this);
+					if(imagenAnterior === -1){
+						imagenAnterior = arrayImagenes[this.getAttribute('data-imagen')];
+						enlaceAnterior = this;
+					}else{
+						parejasRealizadas ++;
+						if(imagenAnterior != arrayImagenes[this.getAttribute('data-imagen')]){
+							bloqueado = true;
+							var _this = this;
+							var func = 
+							setTimeout(function(){
 
-	for(var i = 0; i < _apariciones.length; i++){
-		_apariciones[i] = 0;
+								esconderCarta(_this);
+								esconderCarta(enlaceAnterior);
+								bloqueado = false;
+							},1000);
+						}else{
+							aciertos ++;
+							if(aciertos === dificultad*dificultad/2){
+								alert('Total de intentos: ' + parejasRealizadas);
+								reset();
+							}
+						}
+						imagenAnterior = -1;
+					}
+				}
+			}
+		});
+	}
+}
+
+function levantarCarta(carta){
+	carta.classList.add('activada');
+	carta.getElementsByTagName('img')[0].src = '/images/' + arrayImagenes[carta.getAttribute('data-imagen')] + '.jpg';
+}
+
+function esconderCarta(carta){
+	carta.classList.remove('activada');
+	carta.getElementsByTagName('img')[0].src = '/images/fondo.png';
+}
+
+function reset(){
+	parejasRealizadas = 0;
+	aciertos = 0;
+	elegirDificultad();
+}
+
+function elegirDificultad(){
+	document.getElementById('logo').style.display = 'none';
+    document.getElementById('header').style.display = 'block';
+    document.getElementById('nivel').style.display = 'block';
+    document.getElementById('cuerpo').style.display = 'inline-block';
+    document.getElementById('juego').style.display = 'none';
+}
+
+function iniciarJuego(){
+
+	arrayImagenes = new Array(dificultad*dificultad);
+
+	for(var i = 0; i < arrayImagenes.length; i++){
+		arrayImagenes[i] = -1;
 	}
 
 	document.getElementById('juego').innerHTML = "";
@@ -50,33 +121,32 @@ function iniciarJuego(dificultad){
 		document.getElementById('juego').innerHTML = document.getElementById('juego').innerHTML + _div;
 		
 		for(var j = 0; j < dificultad; j++){
-
+			generarImagen((i*dificultad + j));
 			var _row = document.getElementById('juego').getElementsByClassName('row')[i];
-
-			_row.innerHTML = _row.innerHTML + '<div class="foto"><a href="#"><img class="imagen" src="/images/' +
-			 imagenes[generarImagen(_apariciones, dificultad)] + 
-			 '.jpg"/><img class="fondo" src="/images/fondo.png"></a></div>';
+			_row.innerHTML = _row.innerHTML + '<div class="foto"><a href="#" data-imagen=' + (i*dificultad + j) + ' class="enlace-imagen"><img class="fondo" src="/images/fondo.png"></a></div>';
 		}
 	}
 
+	calcularTamanio();
+
+	establecerFuncionalidad();
+}
+
+function generarImagen(posicion){
+
+	var _randomImage = Math.floor((Math.random() *1000) % (dificultad * dificultad / 2));
+
+	while(arrayImagenes.indexOf(imagenes[_randomImage]) !== arrayImagenes.lastIndexOf(imagenes[_randomImage])){
+		_randomImage = Math.floor((Math.random() *1000) % (dificultad * dificultad / 2));
+	}
+
+	arrayImagenes[posicion] = imagenes[_randomImage];
+}
+
+function calcularTamanio(){
 	var _fotos = document.getElementById('juego').getElementsByTagName('img');
-
 	for(var i = 0; i < _fotos.length; i++){
-
 		_fotos[i].style.width = ((window.innerWidth - 300)/dificultad) + 'px';
 		_fotos[i].style.height = ((window.innerHeight - document.getElementById('header').offsetHeight -30)/dificultad) + 'px';
 	}
-}
-
-function generarImagen(apariciones, dificultad){
-
-	var _random = Math.floor((Math.random() *1000) % (dificultad * dificultad / 2));
-
-	while(apariciones[_random] > 1){
-		_random = Math.floor((Math.random() *1000) % (dificultad * dificultad / 2));
-	}
-
-	apariciones[_random] ++;
-	console.log(_random);
-	return _random;
 }

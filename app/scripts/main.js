@@ -10,8 +10,10 @@ var enlaceAnterior;
 var arrayImagenes;
 var bloqueado = false;
 var aciertos = 0;
-var parejasRealizadas = 0;
+var intentos = 0;
 var dificultad;
+var initTime;
+var endTime;
 
 window.addEventListener("resize", calcularTamanio);
 
@@ -42,6 +44,26 @@ document.getElementById('home').addEventListener('click', function(){
     return false;
 });
 
+document.getElementById('salir-modal').addEventListener('click', function(){
+	mostrarModal();
+	reset();
+	document.getElementById('logo').style.display = 'block';
+    document.getElementById('header').style.display = 'none';
+    document.getElementById('nivel').style.display = 'none';
+});
+
+document.getElementById('dificultad-modal').addEventListener('click', function(){
+	mostrarModal();
+	reset();
+	elegirDificultad();
+});
+
+document.getElementById('reintentar-modal').addEventListener('click', function(){
+	mostrarModal();
+	reset();
+	iniciarJuego();
+});
+
 function establecerFuncionalidad(){
 	var enlaces = document.getElementsByClassName('enlace-imagen');
 	
@@ -56,7 +78,7 @@ function establecerFuncionalidad(){
 						imagenAnterior = arrayImagenes[this.getAttribute('data-imagen')];
 						enlaceAnterior = this;
 					}else{
-						parejasRealizadas ++;
+						intentos ++;
 						if(imagenAnterior != arrayImagenes[this.getAttribute('data-imagen')]){
 							bloqueado = true;
 							var _this = this;
@@ -76,15 +98,14 @@ function establecerFuncionalidad(){
 						}else{
 							aciertos ++;
 							if(aciertos === dificultad*dificultad/2){
-								alert('Total de intentos: ' + parejasRealizadas);
-								reset();
+								endTime = new Date().getTime();
+								finalizar();
 							}
 						}
 						imagenAnterior = -1;
 					}
 				}
 			}
-			
 		});
 	}
 }
@@ -110,9 +131,39 @@ function animacion(elemento){
 }
 
 function reset(){
-	parejasRealizadas = 0;
+	intentos = 0;
 	aciertos = 0;
-	elegirDificultad();
+}
+
+function finalizar(){
+	var _modal = document.getElementById('modal');
+	document.getElementById('intentos').innerHTML = intentos;
+	document.getElementById('aciertos').innerHTML = aciertos;
+	document.getElementById('porcentaje-aciertos').innerHTML = parseInt((aciertos / intentos)*100) + '%';
+	document.getElementById('tiempo').innerHTML = calcularTiempo();
+	mostrarModal();
+}
+
+function mostrarModal(){
+	var _modal = document.getElementById('modal');
+	_modal.style.visibility = (_modal.style.visibility === 'visible') ? 'hidden' : 'visible';
+}
+
+function calcularTiempo(){
+
+	function dosCifras(digito) {
+		return (digito<10? '0':'') + digito;
+	}
+
+	var milisegundos = endTime - initTime;
+
+	var ms = milisegundos % 1000;
+	milisegundos = (milisegundos - ms) / 1000;
+	var seg = milisegundos % 60;
+	milisegundos = (milisegundos - seg) / 60;
+	var min = milisegundos % 60;
+
+	return dosCifras(min) + "' " + dosCifras(seg) + "''";
 }
 
 function elegirDificultad(){
@@ -124,6 +175,7 @@ function elegirDificultad(){
 }
 
 function iniciarJuego(){
+	initTime = new Date().getTime();
 
 	arrayImagenes = new Array(dificultad*dificultad);
 
@@ -138,8 +190,8 @@ function iniciarJuego(){
 		generarImagen(i);
 		_tablero += '<div class="animation_container">' +
 						'<div class="foto">' +
-							'<a href="#" data-imagen=' + i + ' class="enlace-imagen">'+
-								'<div id="f1_card" class="shadow">' +
+							'<div data-imagen=' + i + ' class="enlace-imagen">'+
+								'<div id="f1_card">' +
 						  			'<div class="front face">' +
 						    			'<img src="/images/fondo.png"/>' +
 						  			'</div>' +
@@ -147,7 +199,7 @@ function iniciarJuego(){
 						    			'<img src="/images/fondo.png"/>' +
 						  			'</div>' +
 								'</div>' +
-							'</a>' +
+							'</div>' +
 						'</div>' +
 					'</div>';
 	}
@@ -158,8 +210,6 @@ function iniciarJuego(){
 	calcularTamanio();
 	establecerFuncionalidad();
 }
-
-
 
 function findAncestor (el, cls) {
     while ((el = el.parentElement) && !el.classList.contains(cls));

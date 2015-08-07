@@ -233,10 +233,14 @@ function calcularTamanio(){
 
 	for(var i = 0; i < _fotos.length; i++){
 		if(i <_fotos.length/2){
-			ctnr[i].style.width = ((window.innerWidth - 300)/dificultad) + 'px';
+			ctnr[i].style.width = ((document.getElementById('nivel').offsetWidth - 30)/dificultad) + 'px';
 			ctnr[i].style.height = ((window.innerHeight - document.getElementById('header').offsetHeight -30)/dificultad) + 'px';
 		}
-		_fotos[i].style.width = ((window.innerWidth - 300)/dificultad) + 'px';
+		
+		console.log(document.getElementById('nivel'));
+		console.log(document.getElementById('nivel').offsetWidth - 30);
+		console.log(window.innerHeight - document.getElementById('header').offsetHeight - 30);
+		_fotos[i].style.width = ((document.getElementById('nivel').offsetWidth - 30)/dificultad) + 'px';
 		_fotos[i].style.height = ((window.innerHeight - document.getElementById('header').offsetHeight -30)/dificultad) + 'px';
 	}
 }

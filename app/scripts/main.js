@@ -238,7 +238,7 @@ function calcularTamanio(){
 		}
 		
 		console.log(document.getElementById('nivel'));
-		console.log(document.getElementById('nivel').offsetWidth - 30);
+		console.log(document.getElementById('nivel').offsetWidth);
 		console.log(window.innerHeight - document.getElementById('header').offsetHeight - 30);
 		_fotos[i].style.width = ((document.getElementById('nivel').offsetWidth - 30)/dificultad) + 'px';
 		_fotos[i].style.height = ((window.innerHeight - document.getElementById('header').offsetHeight -30)/dificultad) + 'px';

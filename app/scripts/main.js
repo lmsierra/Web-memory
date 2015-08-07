@@ -48,6 +48,7 @@ function establecerFuncionalidad(){
 	for(var i = 0; i < enlaces.length; i++){
 
 		enlaces[i].addEventListener('click', function(){
+			
 			if(!bloqueado){
 				if(!this.classList.contains('activada')){
 					levantarCarta(this);
@@ -61,11 +62,18 @@ function establecerFuncionalidad(){
 							var _this = this;
 							var func = 
 							setTimeout(function(){
-
+								console.log('1');
 								esconderCarta(_this);
 								esconderCarta(enlaceAnterior);
-								bloqueado = false;
-							},1000);
+								
+								var f = setTimeout(function(){
+									bloqueado = false;
+									var _img =_this.getElementsByClassName('back')[0].getElementsByTagName('img')[0];
+									var _img2 = enlaceAnterior.getElementsByClassName('back')[0].getElementsByTagName('img')[0];
+									_img.src = '/images/fondo.png';
+									_img2.src = '/images/fondo.png';
+								}, 500);
+							},1500);
 						}else{
 							aciertos ++;
 							if(aciertos === dificultad*dificultad/2){
@@ -77,18 +85,31 @@ function establecerFuncionalidad(){
 					}
 				}
 			}
+			
 		});
 	}
 }
 
 function levantarCarta(carta){
 	carta.classList.add('activada');
-	carta.getElementsByTagName('img')[0].src = '/images/' + arrayImagenes[carta.getAttribute('data-imagen')] + '.jpg';
+	var _img = carta.getElementsByClassName('back')[0].getElementsByTagName('img')[0];
+	_img.src = '/images/' + arrayImagenes[carta.getAttribute('data-imagen')] + '.jpg';
+	animacion(carta);
 }
 
 function esconderCarta(carta){
 	carta.classList.remove('activada');
-	carta.getElementsByTagName('img')[0].src = '/images/fondo.png';
+	animacion(carta);
+}
+
+function animacion(elemento){
+	if(elemento.classList.contains('activada')){
+		console.log('animar');
+		findAncestor(elemento, 'animation_container').classList.add('animated');
+	}else{
+		console.log('cancelar');
+		findAncestor(elemento, 'animation_container').classList.remove('animated');
+	}
 }
 
 function reset(){
@@ -113,13 +134,25 @@ function iniciarJuego(){
 		arrayImagenes[i] = -1;
 	}
 
-	var _tablero = "<div class='row'>";
+	var _tablero = '<div class="row">';
 	var _tamanio = dificultad * dificultad;
 
 	for(var i = 0; i < _tamanio; i++){
 		generarImagen(i);
-		_tablero += '<div class="foto"><a href="#" data-imagen=' + i +
-				    ' class="enlace-imagen"><img class="fondo" src="/images/fondo.png"></a></div>';
+		_tablero += '<div class="animation_container">' +
+						'<div class="foto">' +
+							'<a href="#" data-imagen=' + i + ' class="enlace-imagen">'+
+								'<div id="f1_card" class="shadow">' +
+						  			'<div class="front face">' +
+						    			'<img src="/images/fondo.png"/>' +
+						  			'</div>' +
+									'<div class="back face center">' +
+						    			'<img src=""/>' +
+						  			'</div>' +
+								'</div>' +
+							'</a>' +
+						'</div>' +
+					'</div>';
 	}
 
 	_tablero += "</div>";
@@ -127,7 +160,13 @@ function iniciarJuego(){
 
 	calcularTamanio();
 	establecerFuncionalidad();
+}
 
+
+
+function findAncestor (el, cls) {
+    while ((el = el.parentElement) && !el.classList.contains(cls));
+    return el;
 }
 
 function generarImagen(posicion){
@@ -143,7 +182,13 @@ function generarImagen(posicion){
 
 function calcularTamanio(){
 	var _fotos = document.getElementById('juego').getElementsByTagName('img');
+	var ctnr = document.getElementById('juego').getElementsByClassName('animation_container');
+
 	for(var i = 0; i < _fotos.length; i++){
+		if(i <_fotos.length/2){
+			ctnr[i].style.width = ((window.innerWidth - 300)/dificultad) + 'px';
+			ctnr[i].style.height = ((window.innerHeight - document.getElementById('header').offsetHeight -30)/dificultad) + 'px';
+		}
 		_fotos[i].style.width = ((window.innerWidth - 300)/dificultad) + 'px';
 		_fotos[i].style.height = ((window.innerHeight - document.getElementById('header').offsetHeight -30)/dificultad) + 'px';
 	}

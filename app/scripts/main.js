@@ -62,7 +62,6 @@ function establecerFuncionalidad(){
 							var _this = this;
 							var func = 
 							setTimeout(function(){
-								console.log('1');
 								esconderCarta(_this);
 								esconderCarta(enlaceAnterior);
 								
@@ -104,10 +103,8 @@ function esconderCarta(carta){
 
 function animacion(elemento){
 	if(elemento.classList.contains('activada')){
-		console.log('animar');
 		findAncestor(elemento, 'animation_container').classList.add('animated');
 	}else{
-		console.log('cancelar');
 		findAncestor(elemento, 'animation_container').classList.remove('animated');
 	}
 }
@@ -147,7 +144,7 @@ function iniciarJuego(){
 						    			'<img src="/images/fondo.png"/>' +
 						  			'</div>' +
 									'<div class="back face center">' +
-						    			'<img src=""/>' +
+						    			'<img src="/images/fondo.png"/>' +
 						  			'</div>' +
 								'</div>' +
 							'</a>' +
